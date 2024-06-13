@@ -10,7 +10,7 @@ const Header = () => {
     const dispatch = useDispatch();
 
     return (
-        <div className="grid grid-flow-col shadow-lg sticky py-2">
+        <div className="grid grid-flow-col shadow-lg py-2 sticky top-0 bg-white z-10">
             <div className="col-span-2 flex ms-6 items-center">
                 <div className="cursor-pointer me-4">
                     <HiMiniBars3 className="text-2xl" onClick={() => {
@@ -18,7 +18,9 @@ const Header = () => {
                     }} />
                 </div>
                 <div>
-                    <img src="https://lh3.googleusercontent.com/3zkP2SYe7yYoKKe47bsNe44yTgb4Ukh__rBbwXwgkjNRe4PykGG409ozBxzxkrubV7zHKjfxq6y9ShogWtMBMPyB3jiNps91LoNH8A=s500" alt="The image not found" className="w-28" />
+                    {/* <Link to='/'> */}
+                        <img src="https://lh3.googleusercontent.com/3zkP2SYe7yYoKKe47bsNe44yTgb4Ukh__rBbwXwgkjNRe4PykGG409ozBxzxkrubV7zHKjfxq6y9ShogWtMBMPyB3jiNps91LoNH8A=s500" alt="The image not found" className="w-28" />
+                    {/* </Link> */}
                 </div>
             </div>
             <div className="col-span-8 flex items-center justify-center">
