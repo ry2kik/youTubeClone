@@ -4,7 +4,7 @@ import { SiYoutubeshorts } from "react-icons/si";
 import { BsCollectionPlay } from "react-icons/bs";
 import { AiOutlinePlaySquare } from "react-icons/ai";
 import { PiClockCounterClockwiseLight } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 const Sidebar = () => {
     const isMenuOpen = useSelector(store => store.nav.isMenuOpen);
