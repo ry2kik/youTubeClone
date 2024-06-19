@@ -1,27 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/NavSlice";
 import { HiMiniBars3 } from "react-icons/hi2";
 import { LuUser2 } from "react-icons/lu";
 import { CiBellOn } from "react-icons/ci";
 import { IoSearchOutline } from "react-icons/io5";
 import { YOUTUBE_SEARCH_SUGGESTION_API } from "../utils/Constant";
+import { cacheResults } from "../utils/SearchSlice";
 
 const Header = () => {
     const dispatch = useDispatch();
     const [searchInput, setSearchInput] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestion, setShowSuggestion] = useState(false);
+    const searchCache = useSelector(store => store.search);
 
     async function getSearchSuggestion() {
         const data = await fetch(YOUTUBE_SEARCH_SUGGESTION_API + searchInput);
         const json = await data.json();
         setSuggestions(json[1]);
-        // return json;
+
+        dispatch(cacheResults({
+            [searchInput]: json[1],
+        }));
         console.log(suggestions);
     }
 
     useEffect(() => {
-        const timer = setTimeout(() => getSearchSuggestion(), 200);
+        const timer = setTimeout(() => {
+            if (searchCache[searchInput]) {
+                setSuggestions(searchCache[searchInput])
+            } else {
+                getSearchSuggestion();
+            }
+        }, 200);
 
         return () => {
             clearTimeout(timer);
@@ -43,26 +55,32 @@ const Header = () => {
                 </div>
             </div>
             <div className="col-span-8 mt-2">
-                <input type="text" placeholder="Search" className="border border-solid shadow py-2 px-6 rounded-full w-3/4 focus:outline-none" value={searchInput} onChange={(e) => {
-                    setSearchInput(e.target.value);
-                }} />
-
-                <div className="fixed bg-white w-[32rem] rounded-lg shadow-sm mt-1 mx-2">
-                    <ul>
-                        {
-                            (suggestions.length > 0) ? (
-                                suggestions.map(suggestion => (
-                                    <li className="flex items-center hover:bg-gray-100 px-4 py-1 rounded-md">
-                                        <IoSearchOutline />
-                                        <span className="ms-2">{suggestion}</span>
-                                    </li>
-                                ))
-                            ) : (
-                                <></>
-                            )
-                        }
-                    </ul>
-                </div>
+                <input
+                    type="text"
+                    placeholder="Search"
+                    className="border border-solid shadow py-2 px-6 rounded-full w-3/4 focus:outline-none" value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onFocus={() => setShowSuggestion(true)}
+                    onBlur={() => setShowSuggestion(false)}
+                />
+                {
+                    showSuggestion && (<div className="fixed bg-white w-[32rem] rounded-lg shadow-sm mt-1 mx-2">
+                        <ul>
+                            {
+                                (suggestions.length > 0) ? (
+                                    suggestions.map((suggestion, index) => (
+                                        <li className="flex items-center hover:bg-gray-100 px-4 py-1 rounded-md" key={index}>
+                                            <IoSearchOutline />
+                                            <span className="ms-2">{suggestion}</span>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <></>
+                                )
+                            }
+                        </ul>
+                    </div>)
+                }
 
             </div>
 
