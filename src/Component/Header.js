@@ -23,7 +23,7 @@ const Header = () => {
         dispatch(cacheResults({
             [searchInput]: json[1],
         }));
-        console.log(suggestions);
+        console.log(searchCache);
     }
 
     useEffect(() => {
